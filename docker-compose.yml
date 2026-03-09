@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:16
+    container_name: orders_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: orders_db
+    ports:
+      - "5432:5432"
+
+  api:
+    build: .
+    container_name: orders_api
+    ports:
+      - "3001:3000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/orders_db"
+      JWT_SECRET: "sua_chave_secreta"
+      PORT: 3000
+    depends_on:
+      - db
+    command: >
+      sh -c "npx prisma migrate deploy && node src/server.js"

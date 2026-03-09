@@ -110,7 +110,7 @@ async function atualizarStatusPedido(req, res) {
 
     // Atualiza o status do pedido
     const updated = await prisma.order.update({
-        where: { id },
+        where: { orderId: id },
         data: { status: result.data.status },
         include: { items: true },
     })
@@ -122,7 +122,7 @@ async function atualizarStatusPedido(req, res) {
 async function deletarPedido(req, res){
     const { id } = req.params
 
-    const order = await prisma.order.findUnique({ where: { id } })
+    const order = await prisma.order.findUnique({ where: { orderId: id } })
 
     // Verifica se o pedido existe
     if(!order) {
@@ -141,7 +141,7 @@ async function deletarPedido(req, res){
 
     // Deleta primeiro os itens e depois o pedido (respeita a foreign key)
     await prisma.orderItem.deleteMany({ where: { orderId: id } })
-    await prisma.order.delete({ where: { id } })
+    await prisma.order.delete({ where: { orderId: id } })
 
     return res.status(204).send()
 }
