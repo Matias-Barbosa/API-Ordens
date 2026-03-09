@@ -8,8 +8,11 @@ const {
     deletarPedido
 } = require('../controllers/ordersController')
 
+// Instancia o roteador do Express para definir as rotas de pedidos
 const router = Router()
 
+// Aplica o middleware de autenticação em todas as rotas deste roteador
+// Ou seja, todas as rotas abaixo exigem um token JWT válido
 router.use(authMiddleware)
 
 /**
@@ -33,8 +36,9 @@ router.use(authMiddleware)
  *       401:
  *         description: Token não fornecido ou inválido
  */
-
+// Rota para listar todos os pedidos do usuário autenticado
 router.get('/', listarPedidos)
+
 /**
  * @swagger
  * /pedidos/{orderId}:
@@ -60,8 +64,9 @@ router.get('/', listarPedidos)
  *       404:
  *         description: Pedido não encontrado
  */
-
+// Rota para obter um pedido específico pelo seu ID
 router.get('/:id', obterPedido)
+
 /**
  * @swagger
  * /pedidos:
@@ -111,8 +116,9 @@ router.get('/:id', obterPedido)
  *       401:
  *         description: Token não fornecido ou inválido
  */
-
+// Rota para criar um novo pedido com mapeamento de campos
 router.post('/', criarPedido)
+
 /**
  * @swagger
  * /pedidos/{orderId}/status:
@@ -152,8 +158,9 @@ router.post('/', criarPedido)
  *       404:
  *         description: Pedido não encontrado
  */
-
+// Rota para atualizar o status de um pedido existente
 router.patch('/:id/status', atualizarStatusPedido)
+
 /**
  * @swagger
  * /pedidos/{orderId}:
@@ -181,7 +188,7 @@ router.patch('/:id/status', atualizarStatusPedido)
  *       404:
  *         description: Pedido não encontrado
  */
-
+// Rota para deletar um pedido — apenas pedidos com status PENDING podem ser removidos
 router.delete('/:id', deletarPedido)
 
 module.exports = router

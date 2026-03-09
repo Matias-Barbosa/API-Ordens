@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const { register, login } = require('../controllers/authController')
 
+// Instancia o roteador do Express para definir as rotas de autenticação
 const router = Router()
 
 /**
@@ -41,7 +42,9 @@ const router = Router()
  *       409:
  *         description: E-mail já cadastrado
  */
+// Rota para cadastro de novo usuário
 router.post('/register', register)
+
 /**
  * @swagger
  * /auth/login:
@@ -68,7 +71,7 @@ router.post('/register', register)
  *       401:
  *         description: Credenciais inválidas
  */
-
+// Rota para autenticação do usuário e geração do token JWT
 router.post('/login', login)
 
 module.exports = router
