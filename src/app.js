@@ -56,4 +56,15 @@ app.get('/health', (req, res) => {
     res.json({ status: 'ok' })
 })
 
+// Trata rotas não encontradas
+app.use((req, res) => {
+    res.status(404).json({ error: "Rota não encontrada." })
+})
+
+// Trata erros internos inesperados
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).json({ error: 'Erro interno do servidor.' })
+})
+
 module.exports = app
