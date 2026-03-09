@@ -18,8 +18,7 @@ model User {
 }
 
 model Order {
-  id           String      @id @default(uuid())
-  orderId      String      @unique
+  orderId      String      @id
   value        Float
   creationDate DateTime
   status       OrderStatus @default(PENDING)
@@ -33,7 +32,7 @@ model Order {
 model OrderItem {
   id        String @id @default(uuid())
   orderId   String
-  order     Order  @relation(fields: [orderId], references: [id])
+  order     Order  @relation(fields: [orderId], references: [orderId])
   productId Int
   quantity  Int
   price     Float

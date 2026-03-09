@@ -10,6 +10,7 @@ const orderItemSchema = z.object({
 const createOrderSchema = z.object({
   numeroPedido: z.string().min(1, 'Número do pedido é obrigatório.'),
   valorTotal: z.number().positive('Valor total deve ser positivo.'),
+  dataCriacao: z.coerce.date(),
   items: z.array(orderItemSchema).min(1, 'O pedido deve ter ao menos 1 item.'),
 })
 
@@ -23,23 +24,23 @@ async function criarPedido(req, res) {
         return res.status(400).json({ errors: result.error.flatten().fieldErrors })
     }
 
-    const { numeroPedido, valorTotal, items } = result.data
+    const { numeroPedido, valorTotal, dataCriacao, items } = result.data
 
     const order = await prisma.order.create({
-        data: {
-            orderId: numeroPedido,
-            value: valorTotal,
-            creationDate: new Date(),
-            userId: req.userId,
-            items: {
-                create: items.map(item => ({
-                    productId: parseInt(item.idItem),
-                    quantity: item.quantidadeItem,
-                    price: item.valorItem,
-                })),
-            },
+    data: {
+        orderId: numeroPedido,
+        value: valorTotal,
+        creationDate: dataCriacao,
+        userId: req.userId,
+        items: {
+        create: items.map(item => ({
+            productId: parseInt(item.idItem),
+            quantity: item.quantidadeItem,
+            price: item.valorItem,
+        })),
         },
-        include: { items: true },
+    },
+    include: { items: true },
     })
 
     return res.status(201).json({ order })
